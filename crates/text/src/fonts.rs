@@ -1252,17 +1252,20 @@ mod tests {
     }
 
     /// A Microsoft family that isn't installed renders in its installed metric-compatible
-    /// substitute instead of Inter, and still reports itself missing (#1677).
+    /// substitute instead of Inter, and still reports itself missing (#1677). Where the machine
+    /// has the real family (Windows ships Calibri and Cambria), the real one is used instead.
     #[test]
     fn microsoft_families_resolve_to_metric_compatible_substitutes() {
         add_font_data(test_font("Carlito"));
         add_font_data(test_font("Caladea"));
-        let calibri = resolve("Calibri", "Regular");
-        assert_eq!(face(calibri.face).info.family, "Carlito");
-        assert!(calibri.missing, "the original name stays missing for Find Missing Fonts");
-        let cambria = resolve("Cambria", "Bold");
-        assert_eq!(face(cambria.face).info.family, "Caladea");
-        assert!(cambria.missing);
+        for (family, style, substitute) in [("Calibri", "Regular", "Carlito"), ("Cambria", "Bold", "Caladea")] {
+            let r = resolve(family, style);
+            if r.missing {
+                assert_eq!(face(r.face).info.family, substitute, "{family} renders in its substitute");
+            } else {
+                assert_eq!(face(r.face).info.family, family, "an installed {family} is used as is");
+            }
+        }
         let unknown = resolve("No Such Family 1677", "Regular");
         assert_eq!(face(unknown.face).info.family, DEFAULT_FAMILY);
         assert!(unknown.missing);
