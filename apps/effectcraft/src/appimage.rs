@@ -1,5 +1,5 @@
 //! Desktop integration for the AppImage. Wayland compositors (GNOME, KDE…) show a window's icon
-//! from the desktop entry named by its app ID (`ai.storyteller.effectcraft.desktop`). The .deb,
+//! from the desktop entry named by its app ID (`app.freedev.ainz.ks.EffectCraft.desktop`). The .deb,
 //! .rpm and Flatpak packages install one; an AppImage installs nothing, so its window got the
 //! generic icon. Started from an AppImage (`$APPIMAGE`), the app adds a hidden entry
 //! (`NoDisplay=true`: no menu item) pointing at it and its icon under the user's data folder
@@ -9,7 +9,7 @@
 
 use std::path::{Path, PathBuf};
 
-pub const APP_ID: &str = "ai.storyteller.effectcraft";
+pub const APP_ID: &str = "app.freedev.ainz.ks.EffectCraft";
 
 /// Marks entries this module wrote (it never touches others).
 const MARKER: &str = "X-EffectCraft-AppImage=true";
@@ -99,7 +99,9 @@ mod tests {
         assert_eq!(exec_arg("/home/a/EffectCraft.AppImage"), "\"/home/a/EffectCraft.AppImage\"");
         assert_eq!(exec_arg("/a b/$x\"y`z\\w%"), "\"/a b/\\\\$x\\\\\"y\\\\`z\\\\\\\\w%%\"");
         let e = entry("/opt/EffectCraft.AppImage");
-        assert!(e.contains("Exec=\"/opt/EffectCraft.AppImage\" %F\n") && e.contains("NoDisplay=true\n") && e.contains("Icon=ai.storyteller.effectcraft\n"));
+        assert!(
+            e.contains("Exec=\"/opt/EffectCraft.AppImage\" %F\n") && e.contains("NoDisplay=true\n") && e.contains("Icon=app.freedev.ainz.ks.EffectCraft\n")
+        );
     }
 
     #[test]
@@ -107,8 +109,8 @@ mod tests {
         let root = std::env::temp_dir().join(format!("ec-appimage-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&root);
         let (home, system) = (root.join("home"), root.join("system"));
-        let entry_path = home.join("applications/ai.storyteller.effectcraft.desktop");
-        let icon_path = home.join("icons/hicolor/256x256/apps/ai.storyteller.effectcraft.png");
+        let entry_path = home.join("applications/app.freedev.ainz.ks.EffectCraft.desktop");
+        let icon_path = home.join("icons/hicolor/256x256/apps/app.freedev.ainz.ks.EffectCraft.png");
         // First start: entry and icon written; again: nothing to do.
         assert!(integrate("/a/EffectCraft.AppImage", &home, std::slice::from_ref(&system), b"png").unwrap());
         assert_eq!(std::fs::read(&icon_path).unwrap(), b"png");
@@ -124,7 +126,7 @@ mod tests {
         // An installed package provides the entry: nothing is written.
         let _ = std::fs::remove_dir_all(&home);
         std::fs::create_dir_all(system.join("applications")).unwrap();
-        std::fs::write(system.join("applications/ai.storyteller.effectcraft.desktop"), "x").unwrap();
+        std::fs::write(system.join("applications/app.freedev.ainz.ks.EffectCraft.desktop"), "x").unwrap();
         assert!(!integrate("/a/EffectCraft.AppImage", &home, std::slice::from_ref(&system), b"png").unwrap());
         assert!(!entry_path.exists());
         let _ = std::fs::remove_dir_all(&root);

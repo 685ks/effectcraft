@@ -6,7 +6,8 @@
     },
     "effectcraft-app": {
       "command": "cargo",
-      "args": ["run", "--quiet", "--release", "-p", "effectcraft-cli", "--", "mcp", "--bridge", "9877"]
+      "args": ["run", "--quiet", "--release", "-p", "effectcraft-cli", "--", "mcp", "--bridge", "9877"],
+      "env": { "EFFECTCRAFT_CONTROL_TOKEN_FILE": "${HOME}/.effectcraft-control.token" }
     }
   }
 }

@@ -1,5 +1,9 @@
 //! Blocking client for the desktop app's JSON-lines control channel (`docs/control-protocol.md`).
 //! One persistent loopback connection. Only explicitly read-only queries can be resent.
+//!
+//! Each connection first authenticates with the app's control token
+//! (`docs/control-protocol.md` › Authentication): `EFFECTCRAFT_CONTROL_TOKEN`, or the file named by
+//! `EFFECTCRAFT_CONTROL_TOKEN_FILE`.
 
 use std::io::{BufRead, BufReader, Write};
 use std::net::{TcpStream, ToSocketAddrs};
@@ -16,6 +20,20 @@ pub struct BridgeClient {
     addr: String,
     conn: Option<(BufReader<TcpStream>, TcpStream)>,
     next_id: u64,
+    /// The app's control token, sent as the first request on every connection.
+    token: Option<String>,
+}
+
+/// The control token from the environment: `EFFECTCRAFT_CONTROL_TOKEN`, else the file named by
+/// `EFFECTCRAFT_CONTROL_TOKEN_FILE`. `None` when neither is set (the app will refuse the connection).
+pub fn token_from_env() -> Result<Option<String>> {
+    if let Some(t) = std::env::var("EFFECTCRAFT_CONTROL_TOKEN").ok().map(|t| t.trim().to_string()).filter(|t| !t.is_empty()) {
+        return Ok(Some(t));
+    }
+    let Some(path) = std::env::var_os("EFFECTCRAFT_CONTROL_TOKEN_FILE").filter(|p| !p.is_empty()) else { return Ok(None) };
+    let text =
+        std::fs::read_to_string(&path).map_err(|e| Error::BadArgs(format!("EFFECTCRAFT_CONTROL_TOKEN_FILE {}: {e}", std::path::Path::new(&path).display())))?;
+    Ok(Some(text.trim().to_string()))
 }
 
 impl BridgeClient {
@@ -26,7 +44,13 @@ impl BridgeClient {
         if !matches!(host, "127.0.0.1" | "localhost" | "[::1]" | "::1") {
             return Err(Error::BadArgs(format!("bridge address must be loopback (PORT or 127.0.0.1:PORT), got `{addr}`")));
         }
-        Ok(Self { addr, conn: None, next_id: 1 })
+        Ok(Self { addr, conn: None, next_id: 1, token: token_from_env()? })
+    }
+
+    /// Use `token` to authenticate (instead of the one from the environment).
+    pub fn with_token(mut self, token: impl Into<String>) -> Self {
+        self.token = Some(token.into());
+        self
     }
 
     pub fn addr(&self) -> &str {
@@ -45,7 +69,20 @@ impl BridgeClient {
         s.set_read_timeout(Some(READ_TIMEOUT)).ok();
         s.set_nodelay(true).ok();
         let r = s.try_clone().map_err(|e| Error::Bridge(e.to_string()))?;
-        Ok((BufReader::new(r), s))
+        let mut conn = (BufReader::new(r), s);
+        let Some(token) = self.token.as_deref() else { return Ok(conn) };
+        let line = format!("{}\n", json!({"id": "auth", "method": "auth", "params": {"token": token}}));
+        conn.1.write_all(line.as_bytes()).map_err(|e| Error::Bridge(e.to_string()))?;
+        let mut buf = String::new();
+        conn.0.read_line(&mut buf).map_err(|e| Error::Bridge(format!("authenticating with {}: {e}", self.addr)))?;
+        let reply: Value = serde_json::from_str(&buf).map_err(|e| Error::Bridge(format!("bad reply: {e}")))?;
+        if reply.get("ok").and_then(Value::as_bool) != Some(true) {
+            return Err(Error::Bridge(format!(
+                "the app refused the control token for {}; set EFFECTCRAFT_CONTROL_TOKEN or EFFECTCRAFT_CONTROL_TOKEN_FILE to the app's token",
+                self.addr
+            )));
+        }
+        Ok(conn)
     }
 
     /// Call a control method; returns the reply's `result`, or the app's `error` as [`Error::App`].
@@ -102,5 +139,59 @@ impl BridgeClient {
             }
         }
         Err(last)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::net::TcpListener;
+
+    /// A fake app that records every line it reads and answers each with `reply(line)`.
+    fn fake(reply: fn(&Value) -> Value) -> (String, std::thread::JoinHandle<Vec<Value>>) {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let addr = listener.local_addr().unwrap().to_string();
+        let worker = std::thread::spawn(move || {
+            let (stream, _) = listener.accept().unwrap();
+            let mut out = stream.try_clone().unwrap();
+            let mut seen = Vec::new();
+            for line in BufReader::new(stream).lines() {
+                let Ok(line) = line else { break };
+                let msg: Value = serde_json::from_str(&line).unwrap();
+                let mut r = reply(&msg);
+                r["id"] = msg["id"].clone();
+                seen.push(msg);
+                if writeln!(out, "{r}").is_err() || r["ok"] == false {
+                    break;
+                }
+            }
+            seen
+        });
+        (addr, worker)
+    }
+
+    /// Every connection opens with the token (the app refuses anything else first).
+    #[test]
+    fn each_connection_authenticates_first() {
+        let (addr, worker) = fake(|_| json!({"ok": true, "result": {"pong": true}}));
+        let token = "ab".repeat(32);
+        let mut b = BridgeClient::new(&addr).unwrap().with_token(token.clone());
+        assert_eq!(b.call("ui.inspect", json!({})).unwrap(), json!({"pong": true}));
+        drop(b);
+        let seen = worker.join().unwrap();
+        assert_eq!(seen[0]["method"], "auth");
+        assert_eq!(seen[0]["params"]["token"], json!(token));
+        assert_eq!(seen[1]["method"], "ui.inspect");
+    }
+
+    /// A refused token is an error that says how to supply the right one.
+    #[test]
+    fn a_refused_token_is_reported() {
+        let (addr, worker) = fake(|_| json!({"ok": false, "error": "authentication required"}));
+        let mut b = BridgeClient::new(&addr).unwrap().with_token("0".repeat(64));
+        let e = b.call("ui.inspect", json!({})).unwrap_err().to_string();
+        assert!(e.contains("EFFECTCRAFT_CONTROL_TOKEN"), "{e}");
+        drop(b);
+        worker.join().unwrap();
     }
 }

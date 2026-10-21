@@ -1,6 +1,6 @@
-asset:        ai.storyteller.effectcraft.svg
+asset:        app.freedev.ainz.ks.EffectCraft.svg
 title:        EffectCraft app icon, Linux hicolor scalable
-author:       EffectCraft contributors (drawing by the project owner in ArtCraft)
+author:       EffectCraft contributors (drawing by the upstream project owner)
 source:       original work
 license:      MIT OR Apache-2.0
 license-file: assets/app-icon/LICENSE.txt

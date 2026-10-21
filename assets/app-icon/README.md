@@ -15,7 +15,7 @@ full-bleed colour field, tight head-and-shoulders crop, the body running off the
 | Paper | `#efe9dc` | the figure |
 | Ink | `#0b0b0c` | line work and contour |
 
-**Provenance:** the project owner drew it in ArtCraft (a 2880 px engraving-style image, kept in
+**Provenance:** the upstream project owner drew it (a 2880 px engraving-style image, kept in
 craftrules at `assets/app-icons/effectcraft/source.png`). It was vectorised with craftrules
 `assets/logo-options/_tools/vectorize_tile.py`, which keys out the field and traces the ink with potrace.
 Licence: see [LICENSE.txt](LICENSE.txt) (MIT OR Apache-2.0, like the repo).
@@ -30,10 +30,10 @@ Licence: see [LICENSE.txt](LICENSE.txt) (MIT OR Apache-2.0, like the repo).
 | `effectcraft-macos-512.png` | runtime Dock icon on macOS, on Apple's 824/1024 grid |
 | `effectcraft.icns` | macOS icon (Apple grid) |
 | `effectcraft.ico` | Windows icon, 16–256 px; embedded in `effectcraft.exe` by `apps/effectcraft/build.rs` |
-| `hicolor/<n>x<n>/apps/ai.storyteller.effectcraft.png` | Linux icon theme, 16–512 px; the 256 px one is the runtime icon on Windows and Linux |
-| `hicolor/scalable/apps/ai.storyteller.effectcraft.svg` | Linux scalable icon |
+| `hicolor/<n>x<n>/apps/app.freedev.ainz.ks.EffectCraft.png` | Linux icon theme, 16–512 px; the 256 px one is the runtime icon on Windows and Linux |
+| `hicolor/scalable/apps/app.freedev.ainz.ks.EffectCraft.svg` | Linux scalable icon |
 
-App ID: `ai.storyteller.effectcraft` (Wayland app ID, `packaging/linux/ai.storyteller.effectcraft.desktop`).
+App ID: `app.freedev.ainz.ks.EffectCraft` (Wayland app ID, `packaging/linux/app.freedev.ainz.ks.EffectCraft.desktop`).
 
 ## Regenerate
 

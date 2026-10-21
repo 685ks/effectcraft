@@ -8,7 +8,10 @@
 //! `--demo` opens the demo project instead (also Help ▸ Open Demo Project).
 //!
 //! `--control <port>` (or `EFFECTCRAFT_CONTROL_PORT`) starts a localhost JSON-lines control server;
-//! see `effectcraft_ui_egui::control` for the methods.
+//! see `effectcraft_ui_egui::control` for the methods. Each connection authenticates first with
+//! the launch's token: `EFFECTCRAFT_CONTROL_TOKEN`, else the file named by
+//! `EFFECTCRAFT_CONTROL_TOKEN_FILE` (created when missing), else a fresh token printed on stderr
+//! (`docs/control-protocol.md` › Authentication).
 #![cfg_attr(all(target_os = "windows", not(debug_assertions)), windows_subsystem = "windows")]
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
@@ -20,6 +23,7 @@ mod appimage;
 mod apple_events;
 mod audio_out;
 mod control_server;
+mod control_token;
 mod launch_guard;
 #[cfg(target_os = "macos")]
 mod native_menu;
@@ -35,7 +39,7 @@ use serde_json::json;
 /// `packaging/icons.sh`). macOS gets the padded variant so it sits on Apple's icon grid in the Dock.
 /// The 256 px app icon (Windows, Linux; the AppImage's desktop integration installs it too).
 #[cfg(not(target_os = "macos"))]
-const ICON_PNG: &[u8] = include_bytes!("../../../assets/app-icon/hicolor/256x256/apps/ai.storyteller.effectcraft.png");
+const ICON_PNG: &[u8] = include_bytes!("../../../assets/app-icon/hicolor/256x256/apps/app.freedev.ainz.ks.EffectCraft.png");
 
 fn app_icon() -> egui::IconData {
     #[cfg(target_os = "macos")]
@@ -156,6 +160,26 @@ fn main() -> eframe::Result {
             std::process::exit(1);
         }
     };
+    // The control token, before the window opens: a bad token or token file stops the launch.
+    let control = match control_port {
+        None => None,
+        Some(port) => {
+            let env_token = std::env::var("EFFECTCRAFT_CONTROL_TOKEN").ok();
+            let env_file = std::env::var_os("EFFECTCRAFT_CONTROL_TOKEN_FILE").map(std::path::PathBuf::from);
+            match control_token::resolve(env_token, env_file) {
+                Ok((token, source)) => {
+                    if source == control_token::Source::Generated {
+                        eprintln!("effectcraft: control token for port {port}: {token}");
+                    }
+                    Some((port, token))
+                }
+                Err(e) => {
+                    eprintln!("effectcraft: {e}");
+                    std::process::exit(2);
+                }
+            }
+        }
+    };
     // The session log lives in the settings folder (`Logs/effectcraft.log`, the previous two runs
     // kept): a launch from the Dock or a menu has no terminal. Opened after the arguments, so
     // `--version` leaves no file behind; records logged until now are written to it first.
@@ -184,7 +208,7 @@ fn main() -> eframe::Result {
             // Started for an agent (`--control`): open without taking the user's keyboard focus.
             .with_active(control_port.is_none())
             .with_icon(app_icon())
-            // Wayland matches the window to `ai.storyteller.effectcraft.desktop` by this ID.
+            // Wayland matches the window to `app.freedev.ainz.ks.EffectCraft.desktop` by this ID.
             .with_app_id(appimage::APP_ID),
         event_loop_builder: agent_event_loop(control_port.is_some()),
         wgpu_options: wgpu_options(launch.backends),
@@ -325,9 +349,9 @@ fn main() -> eframe::Result {
                 app.hooks.app_action = Some(Box::new(native_menu::app_action));
                 app.hooks.clipboard_text = Some(Box::new(native_menu::clipboard_text));
             }
-            if let Some(port) = control_port {
+            if let Some((port, token)) = control {
                 disable_app_nap();
-                let rx = control_server::start(port, cc.egui_ctx.clone());
+                let rx = control_server::start(port, token, cc.egui_ctx.clone());
                 app = app.with_control(rx);
             }
             log::info!("app created; the window shows after its first frame");
@@ -392,7 +416,7 @@ fn device_limits(adapter: eframe::wgpu::Limits) -> eframe::wgpu::Limits {
 fn startup_failed(e: &eframe::Error, gl_next: bool) {
     let next = if gl_next { "The next launch will try OpenGL instead. " } else { "" };
     let message = format!(
-        "EffectCraft couldn't start its window: {e}\n\n{next}Updating the graphics driver often helps. If it keeps happening, please report it at https://github.com/storytold/effectcraft/issues with this message."
+        "EffectCraft couldn't start its window: {e}\n\n{next}Updating the graphics driver often helps. If it keeps happening, please report it at https://github.com/685ks/effectcraft/issues with this message."
     );
     // Standard error and the session log; standard error alone when RUST_LOG turned errors off.
     if log::log_enabled!(log::Level::Error) {

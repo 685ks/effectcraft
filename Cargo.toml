@@ -8,11 +8,11 @@ version = "0.13.0"
 edition = "2024"
 license = "MIT OR Apache-2.0"
 rust-version = "1.95"
-repository = "https://github.com/storytold/effectcraft"
+repository = "https://github.com/685ks/effectcraft"
 
 [workspace.dependencies]
-craft-pdf = { git = "https://github.com/storytold/craft-libs", rev = "ca50d63b773c99f96e75c77ce5a1d21e7c9cda0d", version = "=0.1.0", default-features = false, features = ["read"] }
-craft-docpath = { version = "0.1.0", git = "https://github.com/storytold/craft-libs", rev = "82a24b006eefa036b43c09a67fb9a3fbd17ffe63" }
+craft-pdf = { git = "https://github.com/685ks/craft-libs", rev = "ca50d63b773c99f96e75c77ce5a1d21e7c9cda0d", version = "=0.1.0", default-features = false, features = ["read"] }
+craft-docpath = { version = "0.1.0", git = "https://github.com/685ks/craft-libs", rev = "82a24b006eefa036b43c09a67fb9a3fbd17ffe63" }
 # internal
 effectcraft-time = { path = "crates/time" }
 effectcraft-geom = { path = "crates/geom" }
@@ -73,26 +73,26 @@ image = { version = "0.25", default-features = false, features = ["png", "jpeg"]
 
 # media codecs + containers: FilmCraft's pure-Rust crates, pinned to a revision (plan/adr/0001).
 # Only `crates/media`, `crates/export` and `crates/interchange` may depend on these.
-filmcraft-codecs = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-media = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-frame = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-color = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-time = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
+filmcraft-codecs = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
+filmcraft-media = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
+filmcraft-frame = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
+filmcraft-color = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
+filmcraft-time = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
 # encoders + muxer (crates/export)
-filmcraft-h264enc = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-prores = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-aac = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-isobmff = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
+filmcraft-h264enc = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
+filmcraft-prores = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
+filmcraft-aac = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
+filmcraft-isobmff = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
 # decoder used as the round-trip oracle of effectcraft-opusenc (crates/export dev-dependency)
-filmcraft-opus = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-vp9 = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
+filmcraft-opus = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
+filmcraft-vp9 = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
 # decoders used as the round-trip oracles of effectcraft-hevcenc / effectcraft-av1enc (dev-dependencies only)
-filmcraft-hevc = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-av1 = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
+filmcraft-hevc = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
+filmcraft-av1 = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
 # timeline interchange (EDL, FCP7 XML, FCPXML, OTIO) for Premiere Pro interop (crates/interchange only)
-filmcraft-interchange = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-project = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-geom = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
+filmcraft-interchange = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
+filmcraft-project = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
+filmcraft-geom = { git = "https://github.com/685ks/filmcraft", rev = "d643a886650bfbf16f24762274054575aa1e8f20" }
 # The symphonia filmcraft-codecs already builds, named only to turn on its AIFF reader: the pinned
 # rev enables wav alone (FilmCraft main enables aiff too). Drop it when the pin moves past that.
 symphonia = { version = "0.5.5", default-features = false, features = ["aiff"] }
@@ -104,7 +104,8 @@ pollster = "0.4"
 
 # ui
 # Shared frontend components; keep this dependency above the engine boundary.
-craft-ui = { version = "0.1.0", git = "https://github.com/storytold/craft-libs", rev = "5c874d51eeb3de70e735c8ce87a59a7dedd47675", features = ["serde"] }
+craft-tokens = { git = "https://github.com/685ks/craft-libs", tag = "v0.1.0" }
+craft-ui = { version = "0.1.0", git = "https://github.com/685ks/craft-libs", rev = "5c874d51eeb3de70e735c8ce87a59a7dedd47675", features = ["serde"] }
 egui = "0.36"
 eframe = { version = "0.36", default-features = false }
 egui_kittest = "0.36"
@@ -114,7 +115,7 @@ cpal = "0.16"
 sys-locale = "0.3"
 
 # Local co-development against a FilmCraft checkout next to this repo: uncomment.
-# [patch."https://github.com/storytold/filmcraft"]
+# [patch."https://github.com/685ks/filmcraft"]
 # filmcraft-codecs = { path = "../filmcraft/crates/codecs" }
 # filmcraft-media = { path = "../filmcraft/crates/media" }
 # filmcraft-frame = { path = "../filmcraft/crates/frame" }
@@ -211,4 +212,4 @@ lto = "thin"
 codegen-units = 1
 
 [patch.crates-io]
-hayro-syntax = { git = "https://github.com/storytold/craft-libs", rev = "ca50d63b773c99f96e75c77ce5a1d21e7c9cda0d", version = "=0.7.2" }
+hayro-syntax = { git = "https://github.com/685ks/craft-libs", rev = "ca50d63b773c99f96e75c77ce5a1d21e7c9cda0d", version = "=0.7.2" }

@@ -13,8 +13,8 @@ release: 1
 section: graphics
 priority: optional
 maintainer: ${EFFECTCRAFT_MAINTAINER}
-vendor: Learning Machines LLC
-homepage: https://getartcraft.com/apps/effectcraft
+vendor: Arthavan Projects
+homepage: https://github.com/685ks/effectcraft
 license: MIT OR Apache-2.0
 description: |-
   Open-source motion graphics and visual effects compositor.
