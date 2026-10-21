@@ -2103,7 +2103,8 @@ mod appearance_tests {
     }
 
     /// Sync with System follows the host's answer (the Linux portal) when it changes, and falls
-    /// back to Dark when nothing reports a system appearance.
+    /// back to the dark family's theme (Arthavan Dark by default) when nothing reports a system
+    /// appearance.
     #[test]
     fn auto_follows_a_stubbed_system_theme() {
         use std::sync::{Arc, Mutex};
@@ -2117,15 +2118,15 @@ mod appearance_tests {
         assert_eq!(app.ui.theme, ThemeKind::Light);
         *system.lock().unwrap() = Some(egui::Theme::Dark);
         app.apply_prefs(&ctx);
-        assert_eq!(app.ui.theme, ThemeKind::Dark, "a system change applies without a settings change");
+        assert_eq!(app.ui.theme, ThemeKind::House, "a system change applies without a settings change");
         *system.lock().unwrap() = None;
         app.apply_prefs(&ctx);
-        assert_eq!(app.ui.theme, ThemeKind::Dark);
+        assert_eq!(app.ui.theme, ThemeKind::House);
         // A fixed mode ignores the system.
         *system.lock().unwrap() = Some(egui::Theme::Light);
         app.set_pref("appearance.appearanceMode", json!("dark")).unwrap();
         app.apply_prefs(&ctx);
-        assert_eq!(app.ui.theme, ThemeKind::Dark);
+        assert_eq!(app.ui.theme, ThemeKind::House);
     }
 
     /// Sync with System leaves egui's theme preference at System, so egui never gives the native

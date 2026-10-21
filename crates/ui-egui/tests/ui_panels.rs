@@ -37,15 +37,13 @@ fn click(h: &mut Harness<'_, EffectcraftApp>, id: &str) {
     h.run_steps(2);
 }
 
-/// #581: the header's Discord pill fits its label with even padding (it was a fixed 104 px with
-/// the text at its left).
+/// The fork carries no ArtCraft community buttons: the header links to the fork's repository only.
 #[test]
-fn discord_pill_fits_its_label() {
+fn the_header_links_to_the_fork_only() {
     let h = harness();
-    let e = h.state().auto.find("header.discord").expect("the Discord pill").clone();
-    let text = h.ctx.fonts_mut(|f| f.layout_no_wrap("Discord".into(), effectcraft_ui_egui::theme::Tokens::semibold(12.0), egui::Color32::WHITE).size().x);
-    // Padding 10, the 14 px icon, a 6 px gap, the text, padding 12.
-    assert!((e.rect[2] - (text + 42.0)).abs() < 0.5, "{} for a {text} px label", e.rect[2]);
+    assert!(h.state().auto.find("header.discord").is_none());
+    assert!(h.state().auto.find("header.web").is_none());
+    assert!(h.state().auto.find("header.github").is_some());
 }
 
 #[test]

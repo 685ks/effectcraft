@@ -26,7 +26,7 @@ pub fn run(root: &Path) -> Result<(), String> {
 fn validate(metadata: &Value) -> Result<(), String> {
     let packages = metadata.get("packages").and_then(Value::as_array).ok_or("cargo metadata has no packages")?;
     let nodes = metadata.pointer("/resolve/nodes").and_then(Value::as_array).ok_or("cargo metadata has no resolved nodes")?;
-    let source = format!("git+https://github.com/storytold/craft-libs?rev={REV}#{REV}");
+    let source = format!("git+https://github.com/685ks/craft-libs?rev={REV}#{REV}");
     for (name, version) in PACKAGES {
         let matches: Vec<_> = packages.iter().filter(|p| p["name"] == *name).collect();
         if matches.len() != 1 || matches[0]["version"] != *version || matches[0]["source"] != source {
@@ -58,7 +58,7 @@ mod tests {
 
     fn metadata() -> Value {
         let packages: Vec<_> = PACKAGES.iter().map(|(name, version)| {
-            json!({"id": name, "name": name, "version": version, "source": format!("git+https://github.com/storytold/craft-libs?rev={REV}#{REV}")})
+            json!({"id": name, "name": name, "version": version, "source": format!("git+https://github.com/685ks/craft-libs?rev={REV}#{REV}")})
         }).collect();
         json!({"packages": packages, "resolve": {"nodes": [
             {"id": "hayro-syntax", "features": ["std"]}, {"id": "craft-pdf", "features": ["read"]}

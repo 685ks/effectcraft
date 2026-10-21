@@ -1,0 +1,13 @@
+# Packaging metadata read by the shared release workflow
+# (685ks/craft-actions/.github/workflows/release-rust-app.yml, called from
+# .github/workflows/release.yml). Asset names: effectcraft-<version>-<os>-<arch>[-portable].<ext>.
+id = "effectcraft"
+display_name = "EffectCraft"
+bundle_id = "app.freedev.ainz.ks.EffectCraft"
+publisher = "Arthavan Projects"
+description = "A motion graphics and visual effects compositor: layers, keyframes, effects, expressions, 3D and a render queue"
+categories = ["AudioVideo", "Video", "Graphics"]
+icon_png = "assets/app-icon/hicolor/512x512/apps/app.freedev.ainz.ks.EffectCraft.png"
+icon_icns = "assets/app-icon/effectcraft.icns"
+icon_ico = "assets/app-icon/effectcraft.ico"
+license = "MIT OR Apache-2.0"

@@ -379,10 +379,11 @@ fn save_and_open_roundtrip() {
 #[test]
 fn help_links_emit_urls() {
     let mut s = Session::default();
-    let r = s.execute("help.discord", json!({})).unwrap();
-    assert_eq!(r["url"], "https://discord.gg/artcraft");
-    assert!(s.drain_events().iter().any(|e| matches!(e, crate::Event::OpenUrl(u) if u.contains("discord"))));
-    assert_eq!(s.execute("help.github", json!({})).unwrap()["url"], "https://github.com/storytold/effectcraft");
+    let r = s.execute("help.github", json!({})).unwrap();
+    assert_eq!(r["url"], "https://github.com/685ks/effectcraft");
+    assert!(s.drain_events().iter().any(|e| matches!(e, crate::Event::OpenUrl(u) if u.contains("685ks/effectcraft"))));
+    assert_eq!(s.execute("help.reportIssue", json!({})).unwrap()["url"], "https://github.com/685ks/effectcraft/issues");
+    assert!(crate::commands::find("help.discord").is_none() && crate::commands::find("help.website").is_none());
 }
 
 #[test]

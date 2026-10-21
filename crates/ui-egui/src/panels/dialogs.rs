@@ -336,39 +336,26 @@ fn about_main(app: &mut EffectcraftApp, ui: &mut egui::Ui, t: &Tokens, cmd: &mut
         t.text_dim,
     );
     ui.add_space(12.0);
-    ui.label(tr("A clean-room, open-source compositor for motion graphics and visual effects: native on macOS, Windows and Linux, and in the browser. Part of the ArtCraft family of creative apps."));
+    ui.label(tr("A clean-room, open-source compositor for motion graphics and visual effects: native on macOS, Windows and Linux, and in the browser."));
+    ui.add_space(6.0);
+    let note = ui.label(egui::RichText::new(tr("A fork of storytold/effectcraft, not affiliated with or endorsed by ArtCraft.")).color(t.text_dim));
+    app.auto.add_response("about.forkNote", &note, effectcraft_engine::links::FORK_NOTE);
+    if effectcraft_engine::links::launcher_managed() {
+        let updates = ui.label(egui::RichText::new(tr("Updates are managed by Arthavan Projects")).color(t.text_dim));
+        app.auto.add_response("about.updates", &updates, effectcraft_engine::links::LAUNCHER_UPDATES_NOTE);
+    }
     ui.add_space(14.0);
-    let links: [(Icon, &str, &str, &'static str); 4] = [
-        (Icon::Chat, "Join the ArtCraft Discord", effectcraft_engine::links::DISCORD, "help.discord"),
-        (Icon::Globe, "ArtCraft website", effectcraft_engine::links::WEBSITE, "help.website"),
-        (Icon::Sparkle, "EffectCraft home page", effectcraft_engine::links::APP_PAGE, "help.appPage"),
-        (Icon::Code, "Source code on GitHub", effectcraft_engine::links::GITHUB, "help.github"),
+    let links: [(Icon, &str, &str, &'static str); 2] = [
+        (Icon::Code, "EffectCraft on GitHub", effectcraft_engine::links::GITHUB, "help.github"),
+        (Icon::Chat, "Report an issue", effectcraft_engine::links::ISSUES, "help.reportIssue"),
     ];
     for (icon, label, url, c) in links {
         let (r, resp) = ui.allocate_exact_size(vec2(ui.available_width(), 30.0), Sense::click());
         let p = ui.painter();
-        let discord = c == "help.discord";
-        p.rect_filled(
-            r,
-            6.0,
-            if discord {
-                Color32::from_rgb(0x58, 0x65, 0xf2)
-            } else if resp.hovered() {
-                t.hover
-            } else {
-                t.field_bg
-            },
-        );
-        let foreground = if discord { Color32::WHITE } else { t.text };
-        icons::paint(p, Rect::from_center_size(pos2(r.min.x + 18.0, r.center().y), vec2(15.0, 15.0)), icon, foreground);
-        p.text(pos2(r.min.x + 36.0, r.center().y), Align2::LEFT_CENTER, tr(label), Tokens::medium(12.5), foreground);
-        p.text(
-            pos2(r.max.x - 12.0, r.center().y),
-            Align2::RIGHT_CENTER,
-            url,
-            Tokens::ui(11.0),
-            if discord { Color32::from_white_alpha(200) } else { t.text_dim },
-        );
+        p.rect_filled(r, 6.0, if resp.hovered() { t.hover } else { t.field_bg });
+        icons::paint(p, Rect::from_center_size(pos2(r.min.x + 18.0, r.center().y), vec2(15.0, 15.0)), icon, t.text);
+        p.text(pos2(r.min.x + 36.0, r.center().y), Align2::LEFT_CENTER, tr(label), Tokens::medium(12.5), t.text);
+        p.text(pos2(r.max.x - 12.0, r.center().y), Align2::RIGHT_CENTER, url, Tokens::ui(11.0), t.text_dim);
         app.auto.add(&format!("about.{c}"), r, label);
         if resp.clicked() {
             *cmd = Some(c);

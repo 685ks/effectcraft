@@ -114,7 +114,7 @@ pub(crate) fn frame_to_image_in(f: &VideoFrame, op: AlphaOp, mut buf: Vec<Px>) -
     img
 }
 
-/// A movie frame turned the way its file says it is shown ([`crate::probe::video_turn`]:
+/// A movie frame turned the way its file says it is shown (FilmCraft's MP4/MOV reader turns movies itself;
 /// clockwise quarter turns; anything else leaves it as decoded).
 pub(crate) fn turned(img: Image, turn: image::metadata::Orientation) -> Image {
     use image::metadata::Orientation;

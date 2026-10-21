@@ -1,6 +1,6 @@
 asset:        effectcraft.ico
 title:        EffectCraft Windows app icon
-author:       EffectCraft contributors (drawing by the project owner in ArtCraft)
+author:       EffectCraft contributors (drawing by the upstream project owner)
 source:       original work
 license:      MIT OR Apache-2.0
 license-file: assets/app-icon/LICENSE.txt

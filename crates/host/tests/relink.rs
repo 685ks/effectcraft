@@ -7,7 +7,7 @@ use effectcraft_engine::project::ItemKind;
 use serde_json::json;
 
 fn icon() -> Vec<u8> {
-    std::fs::read(Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/app-icon/hicolor/16x16/apps/ai.storyteller.effectcraft.png")).unwrap()
+    std::fs::read(Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/app-icon/hicolor/16x16/apps/app.freedev.ainz.ks.EffectCraft.png")).unwrap()
 }
 
 fn footage_paths(s: &effectcraft_engine::Session) -> Vec<(u64, String, bool)> {

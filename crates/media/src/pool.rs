@@ -171,8 +171,9 @@ struct CacheState {
     last: HashMap<Arc<str>, i64>,
 }
 
-/// A movie/audio source by path and the turn its picture is shown with
-/// ([`crate::probe::video_turn`]), opened by the first caller while the others wait for it
+/// A movie/audio source by path and the turn still to apply to its picture (none: FilmCraft's
+/// MP4/MOV reader turns the frames of a movie shown rotated itself), opened by the first caller
+/// while the others wait for it
 /// (`None`: failed to open; not retried until `forget`).
 type SourceSlot = Arc<OnceLock<Option<(SharedSource, Orientation)>>>;
 
@@ -509,7 +510,7 @@ impl MediaPool {
         let path: Arc<str> = footage.path.as_str().into();
         let src = self.inner.source(&path).ok_or("the file can't be opened")?;
         let s0 = start.to_units_floor(rate as i64);
-        let native = src.info().audio.as_ref().map_or(rate, |a| a.sample_rate);
+        let native = src.info().audio().map_or(rate, |a| a.sample_rate);
         if native == 0 || rate == 0 || native == rate {
             return read_stereo(&src, s0, frames, rate);
         }
@@ -600,15 +601,11 @@ impl Inner {
             let in_memory = lock(&self.files).contains_key(&**path);
             let file = std::path::Path::new(&**path);
             let in_place = if in_memory { None } else { crate::stream::open_source(file) };
-            let in_place = in_place.map(|src| {
-                let turn = crate::stream::movie_header(file).map_or(Orientation::NoTransforms, |h| crate::probe::video_turn(&h));
-                src.map(|src| (src, turn))
-            });
+            let in_place = in_place.map(|src| src.map(|src| (src, Orientation::NoTransforms)));
             let opened = in_place.unwrap_or_else(|| {
                 self.read(path).and_then(|bytes| {
                     let name = std::path::Path::new(&**path).file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
-                    let turn = crate::probe::video_turn(&bytes);
-                    filmcraft_codecs::open_bytes(&name, bytes).map(|src| (src, turn)).map_err(MediaError::from)
+                    filmcraft_codecs::open_bytes(&name, bytes).map(|src| (src, Orientation::NoTransforms)).map_err(MediaError::from)
                 })
             });
             match opened {
@@ -915,8 +912,9 @@ fn read_stereo(src: &SharedSource, s0: i64, frames: usize, rate: u32) -> std::re
     }
     let buf = src.audio(s0.max(0), frames - skip, rate).map_err(|e| e.to_string())?;
     let Some(dst) = skip.checked_mul(2).and_then(|i| out.get_mut(i..)) else { return Ok(out) };
-    let aac = src.info().audio.as_ref().is_some_and(|a| a.codec.starts_with("AAC"));
-    crate::downmix::downmix_into(&buf.channels, aac, dst);
+    // FilmCraft's decoders all deliver the WAVE / SMPTE order now: its AAC reader reorders 3–6,
+    // 6.1 and 7.1 surround from AAC's own order (C L R first) itself.
+    crate::downmix::downmix_into(&buf.channels, false, dst);
     Ok(out)
 }
 

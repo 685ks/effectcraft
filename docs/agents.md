@@ -41,7 +41,11 @@ Desktop, Cursor and the like) take the same `command` and `args`.
   its own; if no adapter is usable the server says why and exits. `get_project`'s `renderer`
   (`render.backend`) reports `active` (`gpu` / `cpu`) and, on the CPU, `why`.
 - **Bridge** (`["mcp", "--bridge", "9877"]`): drives a running `effectcraft --control 9877`, so you
-  see every change live. Bridge mode adds `screenshot` and the `ui_*` tools.
+  see every change live. Bridge mode adds `screenshot` and the `ui_*` tools. The control channel
+  needs a token: start the app and the bridge with the same
+  `EFFECTCRAFT_CONTROL_TOKEN_FILE=$HOME/.effectcraft-control.token` (the app creates the file;
+  the shipped `.mcp.json` sets it for the bridge). See
+  [control-protocol.md › Authentication](control-protocol.md#authentication).
 
 After a broken connection, the bridge retries explicitly read-only control queries once.
 Engine commands, UI edits and unknown methods whose transmission or reply fails report an
@@ -553,7 +557,7 @@ On Linux and the BSDs the system font folders are `/usr/share/fonts`, `/usr/loca
 every `<dir>` the fontconfig configuration names (`/etc/fonts/fonts.conf` with its includes,
 `~/.config/fontconfig/fonts.conf`) and, in the Flatpak, the host's fonts under `/run/host`. The
 Flatpak can't see other folders; grant one with
-`flatpak override --user --filesystem=<dir>:ro --env=EFFECTCRAFT_FONT_DIRS=<dir> ai.storyteller.effectcraft`.
+`flatpak override --user --filesystem=<dir>:ro --env=EFFECTCRAFT_FONT_DIRS=<dir> app.freedev.ainz.ks.EffectCraft`.
 
 In expressions, `text.sourceText.style` / `getStyleAt(i, t)` read styles and the setters
 (`setFontSize(v, start?, count?)`, `setFillColor`, `setText`, `setJustification`…) return a
@@ -710,7 +714,8 @@ not read or written.
 
 ## Seeing the UI
 
-To work on the UI, start the app with `cargo run -p effectcraft -- --control 9877` (add `--demo` to
+To work on the UI, start the app with
+`EFFECTCRAFT_CONTROL_TOKEN_FILE=$HOME/.effectcraft-control.token cargo run -p effectcraft -- --control 9877` (add `--demo` to
 open the demo project; without it the app starts with an empty project) and use MCP bridge
 mode or the raw control channel. A good loop is: `ui_elements` to find an id, `ui_click` or `ui_drag`
 to act, then `screenshot {"panel":"Timeline"}` to check the result. `render_frame` shows the

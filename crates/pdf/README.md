@@ -146,7 +146,7 @@ This revision removes an unchecked lazy-array read and preserves later values an
 sign-only numeric entries; the app exercises those inputs through its object adapter, public
 page parser and rasterizer on native and WASM targets.
 
-The root Cargo patch pins Hayro-syntax to the same `storytold/craft-libs` revision. `cargo xtask pdf-deps` checks this graph and refuses
+The root Cargo patch pins Hayro-syntax to the same `685ks/craft-libs` revision. `cargo xtask pdf-deps` checks this graph and refuses
 an enabled Hayro interpreter, rasterizer or CMap dependency. The shared revision must be
 published before a fresh app checkout can resolve it; no sibling checkout is required.
 

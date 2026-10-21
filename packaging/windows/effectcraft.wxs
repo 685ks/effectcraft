@@ -10,13 +10,13 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <Package
       Name="EffectCraft"
-      Manufacturer="Learning Machines LLC"
+      Manufacturer="Arthavan Projects"
       Version="$(var.Version)"
-      UpgradeCode="AACA8593-C6ED-40A8-BA6C-CB325D8529F9"
+      UpgradeCode="1C16239A-1DE0-4A9D-AE17-07FA987F4E45"
       Scope="perMachine"
       Compressed="yes"
       Language="1033">
-    <SummaryInformation Description="EffectCraft motion graphics and visual effects" Manufacturer="Learning Machines LLC" />
+    <SummaryInformation Description="EffectCraft motion graphics and visual effects" Manufacturer="Arthavan Projects" />
     <!-- Same-version upgrades let successive pre-releases of one X.Y.Z replace each other
          (MSI versions are numeric, so 1.2.3-rc.1 and 1.2.3-rc.2 are both 1.2.3). -->
     <MajorUpgrade AllowSameVersionUpgrades="yes"
@@ -27,9 +27,9 @@
 
     <Icon Id="EffectcraftIcon.ico" SourceFile="$(var.IconPath)" />
     <Property Id="ARPPRODUCTICON" Value="EffectcraftIcon.ico" />
-    <Property Id="ARPURLINFOABOUT" Value="https://getartcraft.com/apps/effectcraft" />
-    <Property Id="ARPURLUPDATEINFO" Value="https://getartcraft.com/apps/effectcraft" />
-    <Property Id="ARPHELPLINK" Value="https://discord.gg/artcraft" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/685ks/effectcraft" />
+    <Property Id="ARPURLUPDATEINFO" Value="https://github.com/685ks/effectcraft" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/685ks/effectcraft/issues" />
 
     <!-- An upgrade, repair or silent reinstall goes where the installed copy already is: the App Paths
          "Path" value written below, or for releases before this installer change (no Path value; they

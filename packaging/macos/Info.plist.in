@@ -13,7 +13,7 @@
   <key>CFBundleExecutable</key>
   <string>EffectCraft</string>
   <key>CFBundleIdentifier</key>
-  <string>ai.storyteller.effectcraft</string>
+  <string>app.freedev.ainz.ks.EffectCraft</string>
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
   <key>CFBundlePackageType</key>
@@ -58,7 +58,7 @@
       <key>CFBundleTypeIconFile</key>
       <string>EffectCraft</string>
       <key>LSItemContentTypes</key>
-      <array><string>ai.storyteller.effectcraft.document</string></array>
+      <array><string>app.freedev.ainz.ks.EffectCraft.document</string></array>
     </dict>
   </array>
   <!-- EffectCraft's own format: the project (.ecproj) and its XML copy (.ecprojx). -->
@@ -66,7 +66,7 @@
   <array>
     <dict>
       <key>UTTypeIdentifier</key>
-      <string>ai.storyteller.effectcraft.document</string>
+      <string>app.freedev.ainz.ks.EffectCraft.document</string>
       <key>UTTypeDescription</key>
       <string>EffectCraft Project</string>
       <key>UTTypeConformsTo</key>
@@ -109,7 +109,7 @@
     </dict>
     <dict>
       <key>UTTypeIdentifier</key>
-      <string>ai.storyteller.effectcraft.qoi</string>
+      <string>app.freedev.ainz.ks.EffectCraft.qoi</string>
       <key>UTTypeDescription</key>
       <string>QOI Image</string>
       <key>UTTypeConformsTo</key>

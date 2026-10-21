@@ -1,6 +1,16 @@
 # Releasing EffectCraft
 
-Every push to the `release` branch runs [`.github/workflows/release.yml`](../.github/workflows/release.yml).
+> **This fork (685ks/effectcraft).** Releases are made by
+> [`.github/workflows/release.yml`](../.github/workflows/release.yml), which calls the shared
+> Arthavan Projects workflow (`685ks/craft-actions`, `release-rust-app.yml`) with the ids in
+> [`packaging/app.toml`](../packaging/app.toml) (bundle id `app.freedev.ainz.ks.EffectCraft`,
+> publisher Arthavan Projects). Run it from **Actions › Release › Run workflow** with the version; it
+> creates the GitHub Release `v<version>` (a draft unless `publish` is set), which the Arthavan
+> Projects launcher installs and updates from. A copy started by the launcher
+> (`ARTHAVAN_LAUNCHER=1`) says "Updates are managed by Arthavan Projects" in its About dialog. The
+> upstream process below is kept for reference; its `release` branch trigger is not used here.
+
+Upstream, every push to the `release` branch runs [`.github/workflows/release.yml`](../.github/workflows/release.yml).
 It builds signed installers for macOS and Windows, packages for Linux and FreeBSD, and the web
 build, then creates or updates a
 **draft** GitHub Release named `EffectCraft v<version>`. Nobody sees a draft until a maintainer
@@ -111,9 +121,9 @@ version. `package.sh` writes the `.zsync` when `zsyncmake` (the `zsync` package)
 workflow checks both.
 
 The `.flatpak` bundles repackage the Linux job's tarball with
-`packaging/linux/flatpak-bundle.sh` and `packaging/linux/flatpak/ai.storyteller.effectcraft.bundle.yml`
+`packaging/linux/flatpak-bundle.sh` and `packaging/linux/flatpak/app.freedev.ainz.ks.EffectCraft.bundle.yml`
 (no Rust build inside flatpak-builder), then install the bundle and run `effectcraft-cli --version`
-in the sandbox. `ai.storyteller.effectcraft.yml` is the from-source manifest for Flathub; packaging
+in the sandbox. `app.freedev.ainz.ks.EffectCraft.yml` is the from-source manifest for Flathub; packaging
 lint keeps the runtime and sandbox permissions of the two identical.
 
 ### FreeBSD

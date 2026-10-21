@@ -23,12 +23,38 @@ unknown option prints an error and the app exits with status 1 before it opens a
   the server closes the connection, so nothing sent after it runs. An HTTP request (for example a web
   page's cross-origin `fetch` to `127.0.0.1:<port>`) therefore can't smuggle a command in its body: its
   request line is rejected first. At most 16 connections are served at once; further ones get an error
-  line and are closed. The port has no authentication, so only enable it while you use it.
+  line and are closed. Every connection must authenticate first (below).
+
+## Authentication
+
+The first request on every connection must be
+
+```json
+{"id": 0, "method": "auth", "params": {"token": "<64 hexadecimal digits>"}}
+```
+
+It is answered `{"id": 0, "ok": true, "result": {"authenticated": true}}` and the connection then
+takes requests as usual. Any other first request, or a wrong token, gets
+`{"ok": false, "error": "authentication required"}` and the connection is closed, so another
+program on the machine (or a web page) can't drive the app. Tokens are compared in constant time.
+
+The app takes its token, before it opens a window, from:
+
+1. `EFFECTCRAFT_CONTROL_TOKEN`: the token itself (64 hexadecimal digits);
+2. else `EFFECTCRAFT_CONTROL_TOKEN_FILE`: a file holding the token. A missing file is created with a
+   fresh token (mode 0600 on Unix), so the app and its clients can share one path;
+3. else a fresh random token for this launch, printed on standard error.
+
+A malformed token or an unreadable token file stops the launch with status 2. The MCP bridge
+(`effectcraft-cli mcp --bridge`) and `--bridge` commands read the same two variables and
+authenticate each connection for you.
 
 Quick test:
 
 ```sh
-printf '{"id":1,"method":"engine.execute","params":{"command":"comp.new","params":{"name":"A"}}}\n' | nc 127.0.0.1 9877
+export EFFECTCRAFT_CONTROL_TOKEN=$(openssl rand -hex 32)
+effectcraft --control 9877 &
+printf '{"id":0,"method":"auth","params":{"token":"%s"}}\n{"id":1,"method":"engine.execute","params":{"command":"comp.new","params":{"name":"A"}}}\n' "$EFFECTCRAFT_CONTROL_TOKEN" | nc 127.0.0.1 9877
 ```
 
 ## Engine

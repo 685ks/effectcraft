@@ -11,9 +11,10 @@
 //! stereo is untouched.
 //!
 //! Channel order follows the WAVE / SMPTE convention by channel count (what FilmCraft's AC-3, PCM,
-//! FLAC and Opus readers deliver): 3 = L R C, 4 = quad L R Ls Rs, 5 = L R C Ls Rs,
-//! 6 = L R C LFE Ls Rs, 7 = L R C LFE Cs Ls Rs, 8 = L R C LFE Lb Rb Ls Rs. FilmCraft's AAC-LC
-//! decoder instead delivers AAC's own order (C L R first, LFE last), so AAC gets its own tables.
+//! FLAC, Opus and AAC readers deliver): 3 = L R C, 4 = quad L R Ls Rs, 5 = L R C Ls Rs,
+//! 6 = L R C LFE Ls Rs, 7 = L R C LFE Cs Ls Rs, 8 = L R C LFE Lb Rb Ls Rs. FilmCraft's AAC reader
+//! reorders surround from AAC's own order (C L R first, LFE last) itself; the AAC-order tables
+//! (`aac = true`) remain for callers holding raw AAC-ordered channels.
 //! More than 8 channels carry no known layout: only the first two (front L/R) are used.
 
 use std::f32::consts::FRAC_1_SQRT_2;

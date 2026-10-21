@@ -107,14 +107,16 @@ fn ui_scale_is_a_percentage_from_75_to_200() {
     assert_eq!(Prefs::from_json(r#"{"version": 2, "appearance": {"theme": "light"}}"#).appearance.ui_scale, 100);
 }
 
-/// Settings ▸ Appearance: new installs stay Dark (Sync with System is opt-in), and settings saved
-/// with a single theme load as a fixed mode showing that theme.
+/// Settings ▸ Appearance: new installs stay dark with the house theme, Arthavan Dark (Sync with
+/// System is opt-in), and settings saved with a single theme load as a fixed mode showing that theme.
 #[test]
 fn appearance_defaults_and_legacy_theme_migrate() {
     let p = Prefs::default();
-    assert_eq!((p.appearance.appearance_mode.as_str(), p.appearance.dark_theme.as_str(), p.appearance.light_theme.as_str()), ("dark", "dark", "light"));
-    assert_eq!(p.appearance.resolved_theme(Some(true)), "dark");
-    for (saved, mode, dark, light) in [("darker", "dark", "darker", "light"), ("light", "light", "dark", "light"), ("dark", "dark", "dark", "light")] {
+    assert_eq!((p.appearance.appearance_mode.as_str(), p.appearance.dark_theme.as_str(), p.appearance.light_theme.as_str()), ("dark", "house", "light"));
+    assert_eq!(p.appearance.resolved_theme(Some(true)), "house");
+    for (saved, mode, dark, light) in
+        [("darker", "dark", "darker", "light"), ("light", "light", "house", "light"), ("dark", "dark", "dark", "light"), ("house", "dark", "house", "light")]
+    {
         let p = Prefs::from_json(&json!({"version": 2, "appearance": {"theme": saved}}).to_string());
         assert_eq!(p.appearance.appearance_mode, mode, "{saved}");
         assert_eq!(p.appearance.dark_theme, dark, "{saved}");
@@ -127,7 +129,7 @@ fn appearance_defaults_and_legacy_theme_migrate() {
     let p = Prefs::from_json(r#"{"version": 2, "appearance": {"theme": "dark", "appearanceMode": "auto", "darkTheme": "darker"}}"#);
     assert_eq!((p.appearance.appearance_mode.as_str(), p.appearance.dark_theme.as_str()), ("auto", "darker"));
     let p = Prefs::from_json(r#"{"version": 2, "appearance": {"appearanceMode": "sepia", "darkTheme": "light", "lightTheme": 7}}"#);
-    assert_eq!((p.appearance.appearance_mode.as_str(), p.appearance.dark_theme.as_str(), p.appearance.light_theme.as_str()), ("dark", "dark", "light"));
+    assert_eq!((p.appearance.appearance_mode.as_str(), p.appearance.dark_theme.as_str(), p.appearance.light_theme.as_str()), ("dark", "house", "light"));
 }
 
 /// The appearance settings take only their choices, survive a restart, and old clients that set
