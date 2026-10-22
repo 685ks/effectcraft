@@ -33,7 +33,7 @@ Licence: see [LICENSE.txt](LICENSE.txt) (MIT OR Apache-2.0, like the repo).
 | `hicolor/<n>x<n>/apps/app.freedev.ainz.ks.EffectCraft.png` | Linux icon theme, 16–512 px; the 256 px one is the runtime icon on Windows and Linux |
 | `hicolor/scalable/apps/app.freedev.ainz.ks.EffectCraft.svg` | Linux scalable icon |
 
-App ID: `app.freedev.ainz.ks.EffectCraft` (Wayland app ID, `packaging/linux/app.freedev.ainz.ks.EffectCraft.desktop`).
+App ID: `app.freedev.ainz.ks.EffectCraft` (also the Wayland app ID).
 
 ## Regenerate
 

@@ -8,8 +8,8 @@
 
 <p align="center">
   A free, open-source compositor: compositions, layers,
-  keyframes, 306 effects, layer styles, expressions, 3D cameras and lights, and a render queue, native on macOS,
-  Windows and Linux, and in the browser. Young, moving fast, and already usable.
+  keyframes, 306 effects, layer styles, expressions, 3D cameras and lights, and a render queue, native on
+  Windows, and in the browser. Young, moving fast, and already usable.
 </p>
 
 <p align="center">
@@ -249,45 +249,6 @@ send us right now.
 Installers and executables are code-signed. The installer asks where to install EffectCraft
 (Program Files by default), and later versions install into the same folder. To install silently
 into a folder of your choice: `msiexec /i effectcraft-<ver>-windows-x64.msi /qn INSTALLFOLDER="D:\Apps\EffectCraft"`.
-
-### macOS
-
-| Build | File | Notes |
-|---|---|---|
-| App, universal (Apple silicon + Intel) | `effectcraft-<ver>-macos-universal.dmg` | Signed and notarized |
-| Command-line tool, universal | `effectcraft-cli-<ver>-macos-universal.zip` | Signed and notarized |
-
-### Linux
-
-| Format | x86_64 | aarch64 (ARM64) | Notes |
-|---|---|---|---|
-| AppImage | `effectcraft-<ver>-linux-x86_64.AppImage` | `effectcraft-<ver>-linux-aarch64.AppImage` | Runs anywhere; updates itself with [AppImageUpdate](https://github.com/AppImageCommunity/AppImageUpdate) (`.zsync` files) |
-| Flatpak | `effectcraft-<ver>-linux-x86_64.flatpak` | `effectcraft-<ver>-linux-aarch64.flatpak` | Sandboxed; `flatpak install --user <file>` |
-| Debian/Ubuntu | `effectcraft-<ver>-linux-x86_64.deb` | `effectcraft-<ver>-linux-aarch64.deb` | |
-| Fedora/RHEL/openSUSE | `effectcraft-<ver>-linux-x86_64.rpm` | `effectcraft-<ver>-linux-aarch64.rpm` | |
-| Tarball | `effectcraft-<ver>-linux-x86_64.tar.gz` | `effectcraft-<ver>-linux-aarch64.tar.gz` | Unpack anywhere |
-
-RISC-V 64-bit: `effectcraft-<ver>-linux-riscv64.tar.gz` (tarball only; needs glibc 2.39+, e.g. Ubuntu 24.04+ or Debian 13+).
-
-**File drag-and-drop on Linux:** The current eframe/winit 0.30 native Wayland backend does not
-deliver file-hover or file-drop events. On Hyprland and other native Wayland sessions, use
-**File ▸ Import ▸ File…** (which accepts multiple files), or start EffectCraft via XWayland if
-XWayland is installed and `DISPLAY` is set:
-
-```sh
-env -u WAYLAND_DISPLAY effectcraft
-```
-
-When the backend delivers events (X11/XWayland, Windows and macOS), dropping media anywhere
-in the window imports it, and a drop-target hint appears while hovering. On native Wayland the
-app cannot detect an attempt that generates no event; it shows a startup notice with the
-File ▸ Import fallback instead.
-
-### FreeBSD
-
-| Build | File |
-|---|---|
-| x86_64 | `effectcraft-<ver>-freebsd-x86_64.tar.gz` |
 
 ### Web (WebAssembly)
 
