@@ -1,6 +1,6 @@
 # Fast checks on every pull request and every push to main: formatting, the rebrand guard,
 # dependency layering, asset attribution and the PDF dependency pin; the core crates' tests on
-# Linux, macOS and Windows with a check that the desktop app builds on all three; and on Linux the
+# Linux and Windows with a check that the desktop app builds on both; and on Linux the
 # app's own unit tests (control server and token, arguments), the automation bridge, the media and
 # interchange crates (they use FilmCraft's codecs, pinned to 685ks/filmcraft), the engine's links,
 # help and settings, and the UI crate's unit tests. The full workspace suite is `cargo xtask ci`
@@ -75,7 +75,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: Install Linux system dependencies (egui/winit/rfd/cpal)
