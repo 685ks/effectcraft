@@ -1,42 +1,29 @@
 # EffectCraft app icon
 
-**Creature:** a unicorn, as an engraved head-and-shoulders bust looking out of the tile.
+A motion path with keyframe diamonds and a spark, drawn as a simple line glyph in the Arthavan Projects house style.
+Every app shares the same tile shape and glyph style, so the family reads as one set; each app has
+its own muted tint (hue 302°), and the glyph tells them apart.
 
-**Style:** an ink engraving portrait in the Crafting Apps' owl-template framing (the FilmCraft owl):
-full-bleed colour field, tight head-and-shoulders crop, the body running off the bottom and right edges.
+## Palette
 
-**Tile:** 512 × 512 viewBox, rounded square `rx=112`, clipped; no border or roundel.
-
-**Palette** (exactly three colours):
+The house style's dark tile and light accent, tinted to this app's hue:
 
 | Colour | Hex | Used for |
 |---|---|---|
-| App colour (EffectCraft pink) | `#e0368f` | the full-bleed field |
-| Paper | `#efe9dc` | the figure |
-| Ink | `#0b0b0c` | line work and contour |
+| Tile | `#4d234c` → `#1a0a19` | Vertical gradient filling the rounded square |
+| Hairline | white at 14% | Inner edge of the tile |
+| Accent | `#e198df` | The glyph's strokes |
+| Accent bright | `#f4c2f3` | Highlights in the glyph |
+| Accent low | `#7f397c` | Soft fills behind the glyph |
 
-**Provenance:** the upstream project owner drew it (a 2880 px engraving-style image, kept in
-craftrules at `assets/app-icons/effectcraft/source.png`). It was vectorised with craftrules
-`assets/logo-options/_tools/vectorize_tile.py`, which keys out the field and traces the ink with potrace.
-Licence: see [LICENSE.txt](LICENSE.txt) (MIT OR Apache-2.0, like the repo).
+## Geometry
 
-## Files
+A 512 × 512 viewBox, clipped to a rounded square with `rx=112`; glyph strokes are 30 units with
+round caps, so they stay legible at 16-32 px. Windows and Linux use the full tile. macOS files
+sit on Apple's grid (an 824/1024 body with a transparent margin, made by widening the viewBox).
 
-| File | What |
-|---|---|
-| `effectcraft.svg` | master vector, traced at 2048 px (canonical) |
-| `effectcraft-small.svg` | lighter vector (~350 KB), traced at 1024 px; also the web favicon |
-| `effectcraft-1024.png` | 1024 px render |
-| `effectcraft-macos-512.png` | runtime Dock icon on macOS, on Apple's 824/1024 grid |
-| `effectcraft.icns` | macOS icon (Apple grid) |
-| `effectcraft.ico` | Windows icon, 16–256 px; embedded in `effectcraft.exe` by `apps/effectcraft/build.rs` |
-| `hicolor/<n>x<n>/apps/app.freedev.ainz.ks.EffectCraft.png` | Linux icon theme, 16–512 px; the 256 px one is the runtime icon on Windows and Linux |
-| `hicolor/scalable/apps/app.freedev.ainz.ks.EffectCraft.svg` | Linux scalable icon |
+## Provenance and licence
 
-App ID: `app.freedev.ainz.ks.EffectCraft` (also the Wayland app ID).
-
-## Regenerate
-
-Copy a new `icon-master.svg` / `icon.svg` from craftrules `assets/app-icons/effectcraft/` over
-`effectcraft.svg` / `effectcraft-small.svg`, then run `packaging/icons.sh` (needs `resvg`; `iconutil`
-on macOS for the `.icns`). Copy `effectcraft-small.svg` to `apps/effectcraft-web/web/favicon.svg` too.
+Original work: written by hand as SVG for this project, no source image traced or copied.
+MIT OR Apache-2.0, like the code. `effectcraft.svg` is the master; `packaging/icons.sh` renders every
+other file here from it.
