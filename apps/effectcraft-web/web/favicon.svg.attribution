@@ -1,8 +1,8 @@
 asset:        favicon.svg
-title:        EffectCraft web app icon (favicon)
-author:       EffectCraft contributors (drawing by the upstream project owner)
-source:       original work
+title:        EffectCraft app icon (a motion path with keyframe diamonds and a spark) (web favicon)
+author:       EffectCraft contributors
+source:       original work (hand-written SVG in the Arthavan Projects house style)
 license:      MIT OR Apache-2.0
 license-file: assets/app-icon/LICENSE.txt
-added:        2026-10-02 by EffectCraft contributors (Claude agent, app icon)
-notes:        Copy of assets/app-icon/effectcraft-small.svg (the lighter vector trace of the app icon). Replaces the earlier code-drawn split-square mark.
+added:        2026-10-22 by Claude (agent) for Ks
+notes:        Rendered from assets/app-icon/effectcraft.svg by packaging/icons.sh; replaces the upstream owner's drawing. See assets/app-icon/README.md.

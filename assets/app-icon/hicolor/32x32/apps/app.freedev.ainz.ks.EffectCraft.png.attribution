@@ -1,8 +1,8 @@
 asset:        app.freedev.ainz.ks.EffectCraft.png
-title:        EffectCraft app icon, Linux hicolor 32x32
-author:       EffectCraft contributors (drawing by the upstream project owner)
-source:       original work
+title:        EffectCraft app icon (a motion path with keyframe diamonds and a spark)
+author:       EffectCraft contributors
+source:       original work (hand-written SVG in the Arthavan Projects house style)
 license:      MIT OR Apache-2.0
 license-file: assets/app-icon/LICENSE.txt
-added:        2026-10-02 by EffectCraft contributors (Claude agent, app icon)
-notes:        Rendered from effectcraft.svg with resvg by packaging/icons.sh.
+added:        2026-10-22 by Claude (agent) for Ks
+notes:        Rendered from assets/app-icon/effectcraft.svg by packaging/icons.sh; replaces the upstream owner's drawing. See assets/app-icon/README.md.
