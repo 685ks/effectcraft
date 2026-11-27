@@ -5,7 +5,7 @@ use crate::i18n::{tr, tr_args};
 use egui::{Align2, Color32, Rect, Sense, Stroke, StrokeKind, pos2, vec2};
 use serde_json::json;
 
-use crate::icons::{self, Icon};
+use crate::icons::Icon;
 use crate::state::Tool;
 use crate::theme::Tokens;
 use crate::widgets;
@@ -184,7 +184,8 @@ pub fn show(app: &mut EffectcraftApp, ui: &mut egui::Ui, rect: Rect) {
 
     // Right side: the project link, workspaces.
     let mut rx = rect.max.x - 10.0;
-    for (id, icon, tip, cmd) in [("hdr-github", Icon::Code, "EffectCraft on GitHub", "help.github")] {
+    {
+        let (id, icon, tip, cmd) = ("hdr-github", Icon::Code, "EffectCraft on GitHub", "help.github");
         let r = Rect::from_min_max(pos2(rx - 26.0, cy - 13.0), pos2(rx, cy + 13.0));
         if widgets::icon_button(ui, r, icon, false, &t, egui::Id::new(id)).on_hover_text(tip).clicked() {
             let _ = app.session.execute(cmd, json!({}));
